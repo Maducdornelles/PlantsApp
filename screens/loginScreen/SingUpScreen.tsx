@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'; // Importe os módulos corretos do Firebase
-import { firebaseConfig } from '../../FirebaseConfig'; // Certifique-se de que o caminho do arquivo esteja correto
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { firebaseConfig } from '../../FirebaseConfig';
 
 const SignUpScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [error, setError] = useState(null);
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
   const auth = getAuth(firebaseConfig);
 
   const handleSignUp = async () => {
     try {
       if (password !== passwordConfirmation) {
-        console.log('as senhas nao sao iguais ');
+        console.log('As senhas não são iguais');
         return;
       }
 
@@ -21,21 +22,21 @@ const SignUpScreen = () => {
 
       setError(null);
 
-      // Redirecione o usuário para a próxima tela ou ação
+      // Chame a função para exibir o modal de sucesso
+      toggleSuccessModal(true);
     } catch (error) {
       setError(error.message);
     }
   };
 
+  const toggleSuccessModal = (isVisible) => {
+    setIsSuccessModalVisible(isVisible);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <View style={styles.customHeader}>
-          <TouchableOpacity style={styles.backButton}>
-            <Text style={styles.backButtonLabel}>&lt;</Text>
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Sign Up</Text>
-        </View>
+        {/* Seu código de cabeçalho */}
       </View>
       <View style={styles.formContainer}>
         {error && <Text style={styles.error}>{error}</Text>}
@@ -43,35 +44,59 @@ const SignUpScreen = () => {
           <Text style={styles.label}>E-MAIL</Text>
           <TextInput
             style={styles.input}
-            placeholder="Type your e-mail address"
+            placeholder="Digite seu endereço de e-mail"
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>PASSWORD</Text>
+          <Text style={styles.label}>SENHA</Text>
           <TextInput
             style={styles.input}
-            placeholder="Type your password"
+            placeholder="Digite sua senha"
             secureTextEntry
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>PASSWORD CONFIRMATION</Text>
+          <Text style={styles.label}>CONFIRMAR SENHA</Text>
           <TextInput
             style={styles.input}
-            placeholder="Type your password again"
+            placeholder="Digite sua senha novamente"
             secureTextEntry
             value={passwordConfirmation}
             onChangeText={(text) => setPasswordConfirmation(text)}
           />
         </View>
         <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-          <Text style={styles.buttonText}>Sign Up</Text>
+          <Text style={styles.buttonText}>Cadastrar</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Modal de Sucesso */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isSuccessModalVisible}
+        onRequestClose={() => {
+          toggleSuccessModal(false);
+        }}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.successText}>Usuário cadastrado com sucesso!</Text>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => {
+                toggleSuccessModal(false);
+              }}
+            >
+              <Text style={styles.closeButtonText}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -169,6 +194,34 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     textAlign: 'center',
     marginBottom: 16,
+  },
+  // Estilos para o modal de sucesso
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+  },
+  successText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  closeButton: {
+    backgroundColor: '#418B64',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 

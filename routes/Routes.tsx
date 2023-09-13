@@ -9,6 +9,7 @@ import { FC, ReactNode } from 'react';
 import SignInScreen from '../screens/loginScreen/SingInScreen';
 import SignUpScreen from '../screens/loginScreen/SingUpScreen';
 import DetailsScreen from '../screens/DetailScreen/DetailScreen';
+import ProfileScreen from '../screens/PerfilScreen/PerfilScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -54,6 +55,11 @@ export default () => {
                 <Stack.Screen
                     name="Details"
                     component={DetailsScreen}
+                    options={{ headerShown: false, animation: 'fade' }}
+                />
+                <Stack.Screen
+                    name="Profile"
+                    component={ProfileScreen}
                     options={{ headerShown: false, animation: 'fade' }}
                 />
             </Stack.Navigator>

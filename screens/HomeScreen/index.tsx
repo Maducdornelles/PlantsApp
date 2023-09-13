@@ -16,7 +16,7 @@ const getEmailUsername = (email) => {
     const username = email.split('@')[0];
     return username;
   } else {
-    return 'user'; // Valor padrão caso o email não esteja definido
+    return 'maria'; // Valor padrão caso o email não esteja definido
   }
 };
 
@@ -50,6 +50,33 @@ export default ({ navigation }) => {
     fetchData();
   }, []);
 
+  const renderItemsByCategory = (category) => {
+    const itemsToRender = category === 'all' ? apiData.items : apiData.items.filter((item) => item.category === category);
+
+    return itemsToRender.map((item) => (
+      <TouchableOpacity
+        key={item.id}
+        onPress={() => {
+          navigation.navigate('Details', { plant: item });
+        }}
+      >
+        <Card.Root
+          width={'100%'}
+          height={302}
+          direction="vertical"
+        >
+          <Image source={{ uri: item.image }} style={{ width: '100%', height: '70%' }} />
+          <Card.Description>
+            <Card.Title>
+              {item.title}
+            </Card.Title>
+            <Card.Price value={item.price} />
+          </Card.Description>
+        </Card.Root>
+      </TouchableOpacity>
+    ));
+  };
+
   return (
     <Page>
       <SWrapper style={{ marginTop: 80 }}>
@@ -63,7 +90,7 @@ export default ({ navigation }) => {
               alignItems: 'center',
               justifyContent: 'center',
             }}
-            to="Favorite"
+            to="Profile"
             onPress={() => {}}
           >
             <IconByImage icon="user" size={30} resizeMode="cover" />
@@ -114,6 +141,7 @@ export default ({ navigation }) => {
         <SectionNav.Root
           actualSection="all"
           sections={['all', 'indoor', 'outdoor']}
+          onSelectSection={(type) => {}}
         >
           <SectionNav.Section sectionId="all">
             <SafeAreaView>
@@ -124,28 +152,7 @@ export default ({ navigation }) => {
                     marginBottom: 48,
                   }}
                 >
-                  {apiData.items.map((item) => (
-                    <TouchableOpacity
-                      key={item.id}
-                      onPress={() => {
-                        navigation.navigate('Details', { plant: item });
-                      }}
-                    >
-                      <Card.Root
-                        width={'100%'}
-                        height={302}
-                        direction="vertical"
-                      >
-                        <Image source={{ uri: item.image }} style={{ width: '100%', height: '70%' }} />
-                        <Card.Description>
-                          <Card.Title>
-                            {item.title}
-                          </Card.Title>
-                          <Card.Price value={item.price} />
-                        </Card.Description>
-                      </Card.Root>
-                    </TouchableOpacity>
-                  ))}
+                  {renderItemsByCategory('all')}
                 </View>
               </ScrollView>
             </SafeAreaView>
@@ -159,28 +166,7 @@ export default ({ navigation }) => {
                     marginBottom: 48,
                   }}
                 >
-                  {apiData.items.map((item) => (
-                    <TouchableOpacity
-                      key={item.id}
-                      onPress={() => {
-                        navigation.navigate('Details', { plant: item });
-                      }}
-                    >
-                      <Card.Root
-                        width={'100%'}
-                        height={302}
-                        direction="vertical"
-                      >
-                        <Image source={{ uri: item.image }} style={{ width: '100%', height: '70%' }} />
-                        <Card.Description>
-                          <Card.Title>
-                            {item.title}
-                          </Card.Title>
-                          <Card.Price value={item.price} />
-                        </Card.Description>
-                      </Card.Root>
-                    </TouchableOpacity>
-                  ))}
+                  {renderItemsByCategory('Indoor')}
                 </View>
               </ScrollView>
             </SafeAreaView>
@@ -194,28 +180,7 @@ export default ({ navigation }) => {
                     marginBottom: 48,
                   }}
                 >
-                  {apiData.items.map((item) => (
-                    <TouchableOpacity
-                      key={item.id}
-                      onPress={() => {
-                        navigation.navigate('Details', { plant: item });
-                      }}
-                    >
-                      <Card.Root
-                        width={'100%'}
-                        height={302}
-                        direction="vertical"
-                      >
-                        <Image source={{ uri: item.image }} style={{ width: '100%', height: '70%' }} />
-                        <Card.Description>
-                          <Card.Title>
-                            {item.title}
-                          </Card.Title>
-                          <Card.Price value={item.price} />
-                        </Card.Description>
-                      </Card.Root>
-                    </TouchableOpacity>
-                  ))}
+                  {renderItemsByCategory('Outdoor')}
                 </View>
               </ScrollView>
             </SafeAreaView>
